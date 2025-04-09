@@ -1,28 +1,41 @@
 
+
 <!DOCTYPE html>
 <html>
-  <body style="margin:0; padding:10px;">
-    <input type="color" id="colorPicker" onchange="sendColor()" />
-    <br/>
-    <input type="text" id="hexCode" readonly style="margin-top:8px; width:100px;" />
-    <button onclick="copyHex()" style="margin-left:8px;">Copy</button>
+  <head>
+    <style>
+      body { margin: 0; padding: 10px; font-family: sans-serif; text-align: center; }
+      .container { display: flex; flex-direction: column; align-items: center; }
+      .color-sample { width: 40px; height: 40px; border-radius: 10px; margin-top: 10px; }
+      button { margin-top: 8px; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="color" id="primaryColorPicker" />
+      <input type="text" id="hexCode" readonly style="margin-top: 8px; width: 100px;" />
+      <div class="color-sample" id="previewBox"></div>
+      <button onclick="copyHex()">Copy</button>
+    </div>
 
     <script>
-      const colorInput = document.getElementById("colorPicker");
+      const colorInput = document.getElementById("primaryColorPicker");
       const hexInput = document.getElementById("hexCode");
+      const previewBox = document.getElementById("previewBox");
 
-      function sendColor() {
-        hexInput.value = colorInput.value;
-        parent.postMessage({ type: "colorSelected", color: colorInput.value, picker: "primary" }, "*");
-        console.log("🎨 Color sent:", colorInput.value);
-      }
+      colorInput.addEventListener("input", () => {
+        const selectedColor = colorInput.value;
+        hexInput.value = selectedColor;
+        previewBox.style.backgroundColor = selectedColor;
+        parent.postMessage({ type: "colorSelected", color: selectedColor, picker: "primary" }, "*");
+      });
 
       function copyHex() {
         hexInput.select();
         document.execCommand("copy");
         parent.postMessage({ type: "colorCopied", picker: "primary" }, "*");
-        console.log("📋 Hex copied:", hexInput.value);
       }
     </script>
   </body>
 </html>
+
