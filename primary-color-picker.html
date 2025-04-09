@@ -1,27 +1,27 @@
 
 <!DOCTYPE html>
 <html>
-  <body style="margin:0; padding:10px; font-family:sans-serif;">
-    <input type="color" id="colorInput" />
+  <body style="margin:0; padding:10px;">
+    <input type="color" id="colorPicker" onchange="sendColor()" />
     <br/>
     <input type="text" id="hexCode" readonly style="margin-top:8px; width:100px;" />
     <button onclick="copyHex()" style="margin-left:8px;">Copy</button>
 
     <script>
-      const colorInput = document.getElementById("colorInput");
-      const hexCode = document.getElementById("hexCode");
+      const colorInput = document.getElementById("colorPicker");
+      const hexInput = document.getElementById("hexCode");
 
-      colorInput.addEventListener("input", () => {
-        hexCode.value = colorInput.value;
-        parent.postMessage({ color: colorInput.value, picker: "primary" }, "*");
-        console.log("🟢 Color sent to Velo:", colorInput.value);
-      });
+      function sendColor() {
+        hexInput.value = colorInput.value;
+        parent.postMessage({ type: "colorSelected", color: colorInput.value, picker: "primary" }, "*");
+        console.log("🎨 Color sent:", colorInput.value);
+      }
 
       function copyHex() {
-        hexCode.select();
+        hexInput.select();
         document.execCommand("copy");
         parent.postMessage({ type: "colorCopied", picker: "primary" }, "*");
-        console.log("📋 Hex copied:", hexCode.value);
+        console.log("📋 Hex copied:", hexInput.value);
       }
     </script>
   </body>
